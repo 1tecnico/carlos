@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motos - Informações</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+        .container {
+            padding: 20px;
+        }
+        .moto {
+            background-color: #fff;
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .moto img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        .moto h2 {
+            color: #0056b3;
+        }
+        .moto p {
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+        .moto ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .moto ul li {
+            padding: 5px 0;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Bem-vindo ao Mundo das Motos</h1>
+    <p>Descubra as melhores motos disponíveis no mercado</p>
+</header>
+
+<div class="container">
+    <div class="moto">
+        <h2>Honda CBR 1000RR</h2>
+        <img src="https://example.com/cbr1000rr.jpg" alt="Honda CBR 1000RR">
+        <p>A Honda CBR 1000RR é uma motocicleta esportiva desenvolvida para proporcionar desempenho de ponta em pistas e estradas. Com um motor potente e tecnologia de ponta, é a escolha ideal para pilotos que buscam adrenalina.</p>
+        <ul>
+            <li><strong>Motor:</strong> 998 cc, 4 cilindros</li>
+            <li><strong>Potência:</strong> 190 CV</li>
+            <li><strong>Velocidade Máxima:</strong> 290 km/h</li>
+            <li><strong>Aceleração (0-100 km/h):</strong> 3.0 segundos</li>
+        </ul>
+    </div>
+
+    <div class="moto">
+        <h2>Yamaha MT-09</h2>
+        <img src="https://example.com/mt09.jpg" alt="Yamaha MT-09">
+        <p>A Yamaha MT-09 é uma motocicleta naked de alto desempenho que combina potência e agilidade. Ideal para quem busca uma moto versátil, capaz de enfrentar tanto o trânsito urbano quanto estradas abertas.</p>
+        <ul>
+            <li><strong>Motor:</strong> 847 cc, 3 cilindros</li>
+            <li><strong>Potência:</strong> 115 CV</li>
+            <li><strong>Velocidade Máxima:</strong> 210 km/h</li>
+            <li><strong>Aceleração (0-100 km/h):</strong> 3.5 segundos</li>
+        </ul>
+    </div>
+
+    <div class="moto">
+        <h2>Harley-Davidson Iron 883</h2>
+        <img src="https://example.com/iron883.jpg" alt="Harley-Davidson Iron 883">
+        <p>A Harley-Davidson Iron 883 é uma cruiser clássica, com design robusto e motor V-Twin que proporciona uma experiência de pilotagem única e imersiva. Ideal para quem gosta de um estilo de vida mais tranquilo e apreciador de um bom ronco de motor.</p>
+        <ul>
+            <li><strong>Motor:</strong> 883 cc, V-Twin</li>
+            <li><strong>Potência:</strong> 53 CV</li>
+            <li><strong>Velocidade Máxima:</strong> 170 km/h</li>
+            <li><strong>Aceleração (0-100 km/h):</strong> 5.5 segundos</li>
+        </ul>
+    </div>
+</div>
+
+</body>
+</html>
