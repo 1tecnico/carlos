@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mochila Escolar do Carlos</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background: linear-gradient(135deg, #6f42c1, #d63384);
+    color: #333;
+}
+
+header {
+    text-align: center;
+    padding: 20px;
+    color: white;
+}
+
+.container {
+    max-width: 1000px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    margin-bottom: 30px;
+}
+
+h2 {
+    border-bottom: 2px solid #eee;
+    padding-bottom: 5px;
+}
+
+input, select, button {
+    padding: 8px;
+    margin: 5px 0;
+}
+
+button {
+    background: #6f42c1;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #5936a2;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    background: #f8f9fa;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.concluida {
+    text-decoration: line-through;
+    color: gray;
+}
+
+.remover {
+    background: #dc3545;
+}
+
+.remover:hover {
+    background: #a71d2a;
+}
+
+.media-box {
+    background: #f1f3f5;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🎒 Mochila Escolar do Carlos</h1>
+<p>Organize suas matérias, tarefas, notas e materiais</p>
+</header>
+
+<div class="container">
+
+<h2>📚 Matérias</h2>
+<input type="text" id="materiaInput" placeholder="Nome da matéria">
+<button onclick="adicionarMateria()">Adicionar</button>
+<ul id="listaMaterias"></ul>
+
+<h2>📝 Tarefas</h2>
+<input type="text" id="tarefaInput" placeholder="Descrição da tarefa">
+<input type="date" id="dataInput">
+<select id="prioridadeInput">
+<option value="Baixa">Baixa</option>
+<option value="Média">Média</option>
+<option value="Alta">Alta</option>
+</select>
+<button onclick="adicionarTarefa()">Adicionar</button>
+
+<select onchange="filtrarTarefas(this.value)">
+<option value="todas">Todas</option>
+<option value="pendentes">Pendentes</option>
+<option value="concluidas">Concluídas</option>
+</select>
+
+<ul id="listaTarefas"></ul>
+
+<h2>📊 Notas</h2>
+<input type="text" id="notaMateria" placeholder="Matéria">
+<input type="number" id="notaValor" placeholder="Nota" step="0.1">
+<button onclick="adicionarNota()">Adicionar Nota</button>
+
+<div class="media-box">
+<h3>Médias:</h3>
+<ul id="listaMedias"></ul>
+</div>
+
+<h2>📦 Materiais</h2>
+<input type="text" id="materialInput" placeholder="Material escolar">
+<button onclick="adicionarMaterial()">Adicionar</button>
+<ul id="listaMateriais"></ul>
+
+</div>
+
+<script>
+let materias = JSON.parse(localStorage.getItem("materias")) || [];
+let tarefas = JSON.parse(localStorage.getItem("tarefas")) || [];
+let notas = JSON.parse(localStorage.getItem("notas")) || {};
+let materiais = JSON.parse(localStorage.getItem("materiais")) || [];
+
+function salvar() {
+localStorage.setItem("materias", JSON.stringify(materias));
+localStorage.setItem("tarefas", JSON.stringify(tarefas));
+localStorage.setItem("notas", JSON.stringify(notas));
+localStorage.setItem("materiais", JSON.stringify(materiais));
+}
+
+function renderMaterias() {
+const lista = document.getElementById("listaMaterias");
+lista.innerHTML = "";
+materias.forEach((m, i) => {
+lista.innerHTML += `<li>${m} <button class="remover" onclick="removerMateria(${i})">X</button></li>`;
+});
+}
+
+function adicionarMateria() {
+const input = document.getElementById("materiaInput");
+if(input.value.trim()) {
+materias.push(input.value);
+input.value="";
+salvar();
+renderMaterias();
+}
+}
+
+function removerMateria(i){
+materias.splice(i,1);
+salvar();
+renderMaterias();
+}
+
+function renderTarefas() {
+const lista = document.getElementById("listaTarefas");
+lista.innerHTML="";
+tarefas.forEach((t,i)=>{
+lista.innerHTML += `
+<li class="${t.concluida ? 'concluida':''}">
+${t.texto} | ${t.data} | ${t.prioridade}
+<div>
+<button onclick="toggleTarefa(${i})">✔</button>
+<button class="remover" onclick="removerTarefa(${i})">X</button>
+</div>
+</li>`;
+});
+}
+
+function adicionarTarefa(){
+const texto = tarefaInput.value;
+const data = dataInput.value;
+const prioridade = prioridadeInput.value;
+if(texto && data){
+tarefas.push({texto,data,prioridade,concluida:false});
+tarefaInput.value="";
+salvar();
+renderTarefas();
+}
+}
+
+function toggleTarefa(i){
+tarefas[i].concluida=!tarefas[i].concluida;
+salvar();
+renderTarefas();
+}
+
+function removerTarefa(i){
+tarefas.splice(i,1);
+salvar();
+renderTarefas();
+}
+
+function filtrarTarefas(tipo){
+const lista=document.getElementById("listaTarefas");
+lista.innerHTML="";
+tarefas.filter(t=>{
+if(tipo==="pendentes") return !t.concluida;
+if(tipo==="concluidas") return t.concluida;
+return true;
+}).forEach((t,i)=>{
+lista.innerHTML += `<li class="${t.concluida?'concluida':''}">
+${t.texto} | ${t.data} | ${t.prioridade}
+</li>`;
+});
+}
+
+function adicionarNota(){
+const mat = notaMateria.value;
+const valor = parseFloat(notaValor.value);
+if(mat && !isNaN(valor)){
+if(!notas[mat]) notas[mat]=[];
+notas[mat].push(valor);
+notaMateria.value="";
+notaValor.value="";
+salvar();
+renderMedias();
+}
+}
+
+function renderMedias(){
+const lista=document.getElementById("listaMedias");
+lista.innerHTML="";
+for(let mat in notas){
+let media = notas[mat].reduce((a,b)=>a+b,0)/notas[mat].length;
+lista.innerHTML+=`<li>${mat}: ${media.toFixed(2)}</li>`;
+}
+}
+
+function renderMateriais(){
+const lista=document.getElementById("listaMateriais");
+lista.innerHTML="";
+materiais.forEach((m,i)=>{
+lista.innerHTML+=`<li>${m} <button class="remover" onclick="removerMaterial(${i})">X</button></li>`;
+});
+}
+
+function adicionarMaterial(){
+if(materialInput.value.trim()){
+materiais.push(materialInput.value);
+materialInput.value="";
+salvar();
+renderMateriais();
+}
+}
+
+function removerMaterial(i){
+materiais.splice(i,1);
+salvar();
+renderMateriais();
+}
+
+renderMaterias();
+renderTarefas();
+renderMedias();
+renderMateriais();
+</script>
+
+</body>
+</html>
