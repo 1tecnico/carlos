@@ -3,87 +3,74 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mochila Escolar do Carlos</title>
+<title>Mochila do Carlos</title>
 
 <style>
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    background: linear-gradient(135deg, #6f42c1, #d63384);
-    color: #333;
+body{
+font-family: Arial;
+margin:0;
+background:linear-gradient(135deg,#5f27cd,#ff6b81);
+color:#333;
 }
 
-header {
-    text-align: center;
-    padding: 20px;
-    color: white;
+header{
+text-align:center;
+color:white;
+padding:20px;
 }
 
-.container {
-    max-width: 1000px;
-    margin: auto;
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-    margin-bottom: 30px;
+.container{
+max-width:1000px;
+margin:auto;
+background:white;
+padding:20px;
+border-radius:12px;
+box-shadow:0 5px 20px rgba(0,0,0,0.2);
+margin-bottom:30px;
 }
 
-h2 {
-    border-bottom: 2px solid #eee;
-    padding-bottom: 5px;
+h2{
+border-bottom:2px solid #eee;
+padding-bottom:5px;
 }
 
-input, select, button {
-    padding: 8px;
-    margin: 5px 0;
+input,textarea,button{
+padding:8px;
+margin:5px 0;
+width:100%;
 }
 
-button {
-    background: #6f42c1;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
+button{
+background:#5f27cd;
+color:white;
+border:none;
+border-radius:6px;
+cursor:pointer;
 }
 
-button:hover {
-    background: #5936a2;
+button:hover{
+background:#341f97;
 }
 
-ul {
-    list-style: none;
-    padding: 0;
+ul{
+list-style:none;
+padding:0;
 }
 
-li {
-    background: #f8f9fa;
-    padding: 10px;
-    margin: 5px 0;
-    border-radius: 6px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+li{
+background:#f1f2f6;
+padding:8px;
+margin:5px 0;
+border-radius:6px;
+display:flex;
+justify-content:space-between;
 }
 
-.concluida {
-    text-decoration: line-through;
-    color: gray;
-}
-
-.remover {
-    background: #dc3545;
-}
-
-.remover:hover {
-    background: #a71d2a;
-}
-
-.media-box {
-    background: #f1f3f5;
-    padding: 10px;
-    border-radius: 8px;
-    margin-top: 10px;
+.area{
+background:#f8f9fa;
+padding:10px;
+border-radius:8px;
+margin-top:10px;
 }
 </style>
 </head>
@@ -92,190 +79,188 @@ li {
 
 <header>
 <h1>🎒 Mochila Escolar do Carlos</h1>
-<p>Organize suas matérias, tarefas, notas e materiais</p>
+<p>Português e Matemática</p>
 </header>
 
 <div class="container">
 
-<h2>📚 Matérias</h2>
-<input type="text" id="materiaInput" placeholder="Nome da matéria">
-<button onclick="adicionarMateria()">Adicionar</button>
-<ul id="listaMaterias"></ul>
-
-<h2>📝 Tarefas</h2>
-<input type="text" id="tarefaInput" placeholder="Descrição da tarefa">
+<h2>📚 Tarefas Gerais</h2>
+<input type="text" id="tarefaInput" placeholder="Digite a tarefa">
 <input type="date" id="dataInput">
-<select id="prioridadeInput">
-<option value="Baixa">Baixa</option>
-<option value="Média">Média</option>
-<option value="Alta">Alta</option>
-</select>
 <button onclick="adicionarTarefa()">Adicionar</button>
-
-<select onchange="filtrarTarefas(this.value)">
-<option value="todas">Todas</option>
-<option value="pendentes">Pendentes</option>
-<option value="concluidas">Concluídas</option>
-</select>
-
 <ul id="listaTarefas"></ul>
 
-<h2>📊 Notas</h2>
-<input type="text" id="notaMateria" placeholder="Matéria">
-<input type="number" id="notaValor" placeholder="Nota" step="0.1">
-<button onclick="adicionarNota()">Adicionar Nota</button>
+<h2>🇧🇷 Português</h2>
 
-<div class="media-box">
-<h3>Médias:</h3>
-<ul id="listaMedias"></ul>
+<div class="area">
+<h3>✍️ Redação</h3>
+<textarea id="redacao" rows="5" placeholder="Escreva sua redação aqui..."></textarea>
+<p>Palavras: <span id="contador">0</span></p>
+<button onclick="salvarRedacao()">Salvar Redação</button>
 </div>
 
-<h2>📦 Materiais</h2>
-<input type="text" id="materialInput" placeholder="Material escolar">
-<button onclick="adicionarMaterial()">Adicionar</button>
-<ul id="listaMateriais"></ul>
+<div class="area">
+<h3>📖 Resumo</h3>
+<textarea id="resumo" rows="4" placeholder="Escreva seu resumo..."></textarea>
+<button onclick="salvarResumo()">Salvar Resumo</button>
+</div>
+
+<div class="area">
+<h3>📘 Conteúdos Estudados</h3>
+<input type="text" id="conteudoPort" placeholder="Ex: Figuras de linguagem">
+<button onclick="addConteudoPort()">Adicionar</button>
+<ul id="listaPortugues"></ul>
+</div>
+
+<h2>➗ Matemática</h2>
+
+<div class="area">
+<h3>🧮 Calculadora</h3>
+<input type="text" id="calc" placeholder="Ex: 5*8+2">
+<button onclick="calcular()">Calcular</button>
+<p>Resultado: <span id="resultado"></span></p>
+</div>
+
+<div class="area">
+<h3>📊 Treino de Tabuada</h3>
+<p id="pergunta"></p>
+<input type="number" id="resposta">
+<button onclick="verificar()">Responder</button>
+<p id="feedback"></p>
+</div>
+
+<div class="area">
+<h3>📐 Fórmulas Importantes</h3>
+<input type="text" id="formulaInput" placeholder="Ex: Área do quadrado = lado²">
+<button onclick="addFormula()">Adicionar</button>
+<ul id="listaFormulas"></ul>
+</div>
 
 </div>
 
 <script>
-let materias = JSON.parse(localStorage.getItem("materias")) || [];
 let tarefas = JSON.parse(localStorage.getItem("tarefas")) || [];
-let notas = JSON.parse(localStorage.getItem("notas")) || {};
-let materiais = JSON.parse(localStorage.getItem("materiais")) || [];
+let conteudosPort = JSON.parse(localStorage.getItem("conteudosPort")) || [];
+let formulas = JSON.parse(localStorage.getItem("formulas")) || [];
 
-function salvar() {
-localStorage.setItem("materias", JSON.stringify(materias));
-localStorage.setItem("tarefas", JSON.stringify(tarefas));
-localStorage.setItem("notas", JSON.stringify(notas));
-localStorage.setItem("materiais", JSON.stringify(materiais));
-}
-
-function renderMaterias() {
-const lista = document.getElementById("listaMaterias");
-lista.innerHTML = "";
-materias.forEach((m, i) => {
-lista.innerHTML += `<li>${m} <button class="remover" onclick="removerMateria(${i})">X</button></li>`;
-});
-}
-
-function adicionarMateria() {
-const input = document.getElementById("materiaInput");
-if(input.value.trim()) {
-materias.push(input.value);
-input.value="";
-salvar();
-renderMaterias();
-}
-}
-
-function removerMateria(i){
-materias.splice(i,1);
-salvar();
-renderMaterias();
-}
-
-function renderTarefas() {
-const lista = document.getElementById("listaTarefas");
-lista.innerHTML="";
-tarefas.forEach((t,i)=>{
-lista.innerHTML += `
-<li class="${t.concluida ? 'concluida':''}">
-${t.texto} | ${t.data} | ${t.prioridade}
-<div>
-<button onclick="toggleTarefa(${i})">✔</button>
-<button class="remover" onclick="removerTarefa(${i})">X</button>
-</div>
-</li>`;
-});
+function salvar(){
+localStorage.setItem("tarefas",JSON.stringify(tarefas));
+localStorage.setItem("conteudosPort",JSON.stringify(conteudosPort));
+localStorage.setItem("formulas",JSON.stringify(formulas));
+localStorage.setItem("redacao",document.getElementById("redacao").value);
+localStorage.setItem("resumo",document.getElementById("resumo").value);
 }
 
 function adicionarTarefa(){
-const texto = tarefaInput.value;
-const data = dataInput.value;
-const prioridade = prioridadeInput.value;
+let texto=document.getElementById("tarefaInput").value;
+let data=document.getElementById("dataInput").value;
 if(texto && data){
-tarefas.push({texto,data,prioridade,concluida:false});
-tarefaInput.value="";
-salvar();
+tarefas.push(texto+" | "+data);
+document.getElementById("tarefaInput").value="";
 renderTarefas();
+salvar();
 }
 }
 
-function toggleTarefa(i){
-tarefas[i].concluida=!tarefas[i].concluida;
-salvar();
-renderTarefas();
+function renderTarefas(){
+let lista=document.getElementById("listaTarefas");
+lista.innerHTML="";
+tarefas.forEach((t,i)=>{
+lista.innerHTML+=`<li>${t} <button onclick="removerTarefa(${i})">X</button></li>`;
+});
 }
 
 function removerTarefa(i){
 tarefas.splice(i,1);
-salvar();
 renderTarefas();
+salvar();
 }
 
-function filtrarTarefas(tipo){
-const lista=document.getElementById("listaTarefas");
+document.getElementById("redacao").addEventListener("input",function(){
+let texto=this.value.trim();
+let palavras=texto?texto.split(/\s+/).length:0;
+document.getElementById("contador").innerText=palavras;
+});
+
+function salvarRedacao(){salvar();}
+function salvarResumo(){salvar();}
+
+function addConteudoPort(){
+let valor=document.getElementById("conteudoPort").value;
+if(valor){
+conteudosPort.push(valor);
+document.getElementById("conteudoPort").value="";
+renderPort();
+salvar();
+}
+}
+
+function renderPort(){
+let lista=document.getElementById("listaPortugues");
 lista.innerHTML="";
-tarefas.filter(t=>{
-if(tipo==="pendentes") return !t.concluida;
-if(tipo==="concluidas") return t.concluida;
-return true;
-}).forEach((t,i)=>{
-lista.innerHTML += `<li class="${t.concluida?'concluida':''}">
-${t.texto} | ${t.data} | ${t.prioridade}
-</li>`;
+conteudosPort.forEach((c,i)=>{
+lista.innerHTML+=`<li>${c} <button onclick="removerPort(${i})">X</button></li>`;
 });
 }
 
-function adicionarNota(){
-const mat = notaMateria.value;
-const valor = parseFloat(notaValor.value);
-if(mat && !isNaN(valor)){
-if(!notas[mat]) notas[mat]=[];
-notas[mat].push(valor);
-notaMateria.value="";
-notaValor.value="";
+function removerPort(i){
+conteudosPort.splice(i,1);
+renderPort();
 salvar();
-renderMedias();
+}
+
+function calcular(){
+let exp=document.getElementById("calc").value;
+try{
+document.getElementById("resultado").innerText=eval(exp);
+}catch{
+document.getElementById("resultado").innerText="Erro";
 }
 }
 
-function renderMedias(){
-const lista=document.getElementById("listaMedias");
-lista.innerHTML="";
-for(let mat in notas){
-let media = notas[mat].reduce((a,b)=>a+b,0)/notas[mat].length;
-lista.innerHTML+=`<li>${mat}: ${media.toFixed(2)}</li>`;
+let n1=Math.floor(Math.random()*10);
+let n2=Math.floor(Math.random()*10);
+document.getElementById("pergunta").innerText=`Quanto é ${n1} x ${n2}?`;
+
+function verificar(){
+let resp=parseInt(document.getElementById("resposta").value);
+if(resp===n1*n2){
+document.getElementById("feedback").innerText="Correto!";
+}else{
+document.getElementById("feedback").innerText="Tente novamente.";
 }
 }
 
-function renderMateriais(){
-const lista=document.getElementById("listaMateriais");
+function addFormula(){
+let valor=document.getElementById("formulaInput").value;
+if(valor){
+formulas.push(valor);
+document.getElementById("formulaInput").value="";
+renderFormulas();
+salvar();
+}
+}
+
+function renderFormulas(){
+let lista=document.getElementById("listaFormulas");
 lista.innerHTML="";
-materiais.forEach((m,i)=>{
-lista.innerHTML+=`<li>${m} <button class="remover" onclick="removerMaterial(${i})">X</button></li>`;
+formulas.forEach((f,i)=>{
+lista.innerHTML+=`<li>${f} <button onclick="removerFormula(${i})">X</button></li>`;
 });
 }
 
-function adicionarMaterial(){
-if(materialInput.value.trim()){
-materiais.push(materialInput.value);
-materialInput.value="";
+function removerFormula(i){
+formulas.splice(i,1);
+renderFormulas();
 salvar();
-renderMateriais();
-}
 }
 
-function removerMaterial(i){
-materiais.splice(i,1);
-salvar();
-renderMateriais();
-}
+document.getElementById("redacao").value=localStorage.getItem("redacao")||"";
+document.getElementById("resumo").value=localStorage.getItem("resumo")||"";
 
-renderMaterias();
 renderTarefas();
-renderMedias();
-renderMateriais();
+renderPort();
+renderFormulas();
 </script>
 
 </body>
