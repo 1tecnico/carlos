@@ -3,13 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Mochila do Carlos</title>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <style>
+
 body{
-font-family: Arial;
+font-family:Arial;
 margin:0;
-background:linear-gradient(135deg,#5f27cd,#ff6b81);
+background:linear-gradient(135deg,#6c5ce7,#fd79a8);
 color:#333;
 }
 
@@ -35,13 +39,13 @@ padding-bottom:5px;
 }
 
 input,textarea,button{
+width:100%;
 padding:8px;
 margin:5px 0;
-width:100%;
 }
 
 button{
-background:#5f27cd;
+background:#6c5ce7;
 color:white;
 border:none;
 border-radius:6px;
@@ -49,218 +53,230 @@ cursor:pointer;
 }
 
 button:hover{
-background:#341f97;
-}
-
-ul{
-list-style:none;
-padding:0;
-}
-
-li{
-background:#f1f2f6;
-padding:8px;
-margin:5px 0;
-border-radius:6px;
-display:flex;
-justify-content:space-between;
+background:#4834d4;
 }
 
 .area{
-background:#f8f9fa;
+background:#f1f2f6;
 padding:10px;
 border-radius:8px;
 margin-top:10px;
 }
+
 </style>
 </head>
 
 <body>
 
 <header>
+
 <h1>🎒 Mochila Escolar do Carlos</h1>
-<p>Português e Matemática</p>
+<p>Organizador completo de estudos</p>
+
 </header>
 
 <div class="container">
 
-<h2>📚 Tarefas Gerais</h2>
-<input type="text" id="tarefaInput" placeholder="Digite a tarefa">
-<input type="date" id="dataInput">
-<button onclick="adicionarTarefa()">Adicionar</button>
-<ul id="listaTarefas"></ul>
+<h2>📅 Calendário Escolar</h2>
 
-<h2>🇧🇷 Português</h2>
+<input type="date" id="dataEvento">
+<input type="text" id="eventoInput" placeholder="Prova ou atividade">
+<button onclick="addEvento()">Adicionar</button>
+
+<ul id="listaEventos"></ul>
+
+<h2>📊 Gráfico de Notas</h2>
+
+<input type="text" id="materiaNota" placeholder="Matéria">
+<input type="number" id="notaValor" placeholder="Nota">
+<button onclick="addNota()">Adicionar Nota</button>
+
+<canvas id="graficoNotas"></canvas>
+
+<h2>🧠 Sistema de Estudo</h2>
+
+<p id="dicaEstudo"></p>
+<button onclick="gerarDica()">Nova dica de estudo</button>
+
+<h2>📚 Resumo Automático</h2>
+
+<textarea id="textoResumo" rows="6" placeholder="Cole o texto aqui"></textarea>
+<button onclick="gerarResumo()">Gerar resumo</button>
 
 <div class="area">
-<h3>✍️ Redação</h3>
-<textarea id="redacao" rows="5" placeholder="Escreva sua redação aqui..."></textarea>
-<p>Palavras: <span id="contador">0</span></p>
-<button onclick="salvarRedacao()">Salvar Redação</button>
+<p id="resumoGerado"></p>
 </div>
 
-<div class="area">
-<h3>📖 Resumo</h3>
-<textarea id="resumo" rows="4" placeholder="Escreva seu resumo..."></textarea>
-<button onclick="salvarResumo()">Salvar Resumo</button>
-</div>
+<h2>📝 Modo Prova</h2>
 
 <div class="area">
-<h3>📘 Conteúdos Estudados</h3>
-<input type="text" id="conteudoPort" placeholder="Ex: Figuras de linguagem">
-<button onclick="addConteudoPort()">Adicionar</button>
-<ul id="listaPortugues"></ul>
-</div>
 
-<h2>➗ Matemática</h2>
-
-<div class="area">
-<h3>🧮 Calculadora</h3>
-<input type="text" id="calc" placeholder="Ex: 5*8+2">
-<button onclick="calcular()">Calcular</button>
-<p>Resultado: <span id="resultado"></span></p>
-</div>
-
-<div class="area">
-<h3>📊 Treino de Tabuada</h3>
 <p id="pergunta"></p>
-<input type="number" id="resposta">
-<button onclick="verificar()">Responder</button>
-<p id="feedback"></p>
-</div>
 
-<div class="area">
-<h3>📐 Fórmulas Importantes</h3>
-<input type="text" id="formulaInput" placeholder="Ex: Área do quadrado = lado²">
-<button onclick="addFormula()">Adicionar</button>
-<ul id="listaFormulas"></ul>
+<input type="number" id="resposta" placeholder="Digite sua resposta">
+
+<button onclick="verificar()">Responder</button>
+
+<p id="feedback"></p>
+
+<p>Acertos: <span id="acertos">0</span></p>
+
 </div>
 
 </div>
 
 <script>
-let tarefas = JSON.parse(localStorage.getItem("tarefas")) || [];
-let conteudosPort = JSON.parse(localStorage.getItem("conteudosPort")) || [];
-let formulas = JSON.parse(localStorage.getItem("formulas")) || [];
+
+/* CALENDARIO */
+
+let eventos = JSON.parse(localStorage.getItem("eventos")) || [];
 
 function salvar(){
-localStorage.setItem("tarefas",JSON.stringify(tarefas));
-localStorage.setItem("conteudosPort",JSON.stringify(conteudosPort));
-localStorage.setItem("formulas",JSON.stringify(formulas));
-localStorage.setItem("redacao",document.getElementById("redacao").value);
-localStorage.setItem("resumo",document.getElementById("resumo").value);
+localStorage.setItem("eventos",JSON.stringify(eventos));
 }
 
-function adicionarTarefa(){
-let texto=document.getElementById("tarefaInput").value;
-let data=document.getElementById("dataInput").value;
-if(texto && data){
-tarefas.push(texto+" | "+data);
-document.getElementById("tarefaInput").value="";
-renderTarefas();
+function addEvento(){
+
+let data=document.getElementById("dataEvento").value;
+let evento=document.getElementById("eventoInput").value;
+
+if(data && evento){
+
+eventos.push(data+" - "+evento);
+
+document.getElementById("eventoInput").value="";
+
+renderEventos();
+
 salvar();
-}
+
 }
 
-function renderTarefas(){
-let lista=document.getElementById("listaTarefas");
+}
+
+function renderEventos(){
+
+let lista=document.getElementById("listaEventos");
+
 lista.innerHTML="";
-tarefas.forEach((t,i)=>{
-lista.innerHTML+=`<li>${t} <button onclick="removerTarefa(${i})">X</button></li>`;
-});
-}
 
-function removerTarefa(i){
-tarefas.splice(i,1);
-renderTarefas();
-salvar();
-}
+eventos.forEach((e)=>{
 
-document.getElementById("redacao").addEventListener("input",function(){
-let texto=this.value.trim();
-let palavras=texto?texto.split(/\s+/).length:0;
-document.getElementById("contador").innerText=palavras;
+lista.innerHTML+=`<li>${e}</li>`;
+
 });
 
-function salvarRedacao(){salvar();}
-function salvarResumo(){salvar();}
-
-function addConteudoPort(){
-let valor=document.getElementById("conteudoPort").value;
-if(valor){
-conteudosPort.push(valor);
-document.getElementById("conteudoPort").value="";
-renderPort();
-salvar();
-}
 }
 
-function renderPort(){
-let lista=document.getElementById("listaPortugues");
-lista.innerHTML="";
-conteudosPort.forEach((c,i)=>{
-lista.innerHTML+=`<li>${c} <button onclick="removerPort(${i})">X</button></li>`;
+renderEventos();
+
+/* GRAFICO */
+
+let materias=[];
+let notas=[];
+
+const ctx=document.getElementById('graficoNotas');
+
+let grafico=new Chart(ctx,{
+type:'bar',
+data:{
+labels:materias,
+datasets:[{
+label:'Notas',
+data:notas
+}]
+}
 });
+
+function addNota(){
+
+let materia=document.getElementById("materiaNota").value;
+let nota=parseFloat(document.getElementById("notaValor").value);
+
+if(materia && nota){
+
+materias.push(materia);
+notas.push(nota);
+
+grafico.update();
+
 }
 
-function removerPort(i){
-conteudosPort.splice(i,1);
-renderPort();
-salvar();
 }
 
-function calcular(){
-let exp=document.getElementById("calc").value;
-try{
-document.getElementById("resultado").innerText=eval(exp);
-}catch{
-document.getElementById("resultado").innerText="Erro";
-}
+/* SISTEMA ESTUDO */
+
+const dicas=[
+"Revise a matéria 10 minutos após estudar",
+"Explique a matéria para outra pessoa",
+"Faça exercícios para fixar",
+"Use mapas mentais",
+"Revise no dia seguinte"
+];
+
+function gerarDica(){
+
+let sorteio=Math.floor(Math.random()*dicas.length);
+
+document.getElementById("dicaEstudo").innerText=dicas[sorteio];
+
 }
 
-let n1=Math.floor(Math.random()*10);
-let n2=Math.floor(Math.random()*10);
+/* RESUMO */
+
+function gerarResumo(){
+
+let texto=document.getElementById("textoResumo").value;
+
+let frases=texto.split(".");
+
+let resumo=frases.slice(0,2).join(".");
+
+document.getElementById("resumoGerado").innerText=resumo;
+
+}
+
+/* MODO PROVA */
+
+let n1;
+let n2;
+let acertos=0;
+
+function novaPergunta(){
+
+n1=Math.floor(Math.random()*10)+1;
+n2=Math.floor(Math.random()*10)+1;
+
 document.getElementById("pergunta").innerText=`Quanto é ${n1} x ${n2}?`;
 
+document.getElementById("resposta").value="";
+
+}
+
 function verificar(){
+
 let resp=parseInt(document.getElementById("resposta").value);
+
 if(resp===n1*n2){
-document.getElementById("feedback").innerText="Correto!";
+
+acertos++;
+
+document.getElementById("feedback").innerText="✅ Correto! Nova pergunta.";
+
+document.getElementById("acertos").innerText=acertos;
+
+novaPergunta();
+
 }else{
-document.getElementById("feedback").innerText="Tente novamente.";
-}
+
+document.getElementById("feedback").innerText="❌ Errado, tente novamente.";
+
 }
 
-function addFormula(){
-let valor=document.getElementById("formulaInput").value;
-if(valor){
-formulas.push(valor);
-document.getElementById("formulaInput").value="";
-renderFormulas();
-salvar();
-}
 }
 
-function renderFormulas(){
-let lista=document.getElementById("listaFormulas");
-lista.innerHTML="";
-formulas.forEach((f,i)=>{
-lista.innerHTML+=`<li>${f} <button onclick="removerFormula(${i})">X</button></li>`;
-});
-}
+novaPergunta();
 
-function removerFormula(i){
-formulas.splice(i,1);
-renderFormulas();
-salvar();
-}
-
-document.getElementById("redacao").value=localStorage.getItem("redacao")||"";
-document.getElementById("resumo").value=localStorage.getItem("resumo")||"";
-
-renderTarefas();
-renderPort();
-renderFormulas();
 </script>
 
 </body>
