@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mochila do Carlos</title>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<title>Painel de Disciplinas</title>
 
 <style>
+
 body{
 font-family:Arial;
 background:#eef2ff;
@@ -15,38 +15,29 @@ margin:0;
 }
 
 header{
-background:#4f46e5;
+background:#4338ca;
 color:white;
-padding:20px;
 text-align:center;
+padding:20px;
 }
 
 .container{
-padding:20px;
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
 gap:20px;
+padding:20px;
 }
 
 .card{
 background:white;
-padding:20px;
+padding:15px;
 border-radius:10px;
-box-shadow:0 4px 10px rgba(0,0,0,0.1);
+box-shadow:0 3px 10px rgba(0,0,0,0.1);
 }
 
-button{
-background:#4f46e5;
-color:white;
-border:none;
-padding:8px 12px;
-border-radius:5px;
-cursor:pointer;
-margin-top:5px;
-}
-
-button:hover{
-background:#3730a3;
+.card h2{
+margin-top:0;
+color:#4338ca;
 }
 
 input,textarea{
@@ -56,290 +47,148 @@ margin-top:5px;
 margin-bottom:10px;
 }
 
-#grafico{
-width:100%;
-height:250px;
+button{
+background:#4338ca;
+color:white;
+border:none;
+padding:6px 10px;
+border-radius:5px;
+cursor:pointer;
 }
 
-.materia{
-background:#eef2ff;
-padding:10px;
-border-radius:6px;
-margin-bottom:10px;
+button:hover{
+background:#312e81;
 }
+
+.aula{
+background:#eef2ff;
+padding:8px;
+border-radius:6px;
+margin-bottom:6px;
+}
+
 </style>
 </head>
 
 <body>
 
 <header>
-<h1>🎒 Mochila do Carlos</h1>
-<p>Sistema completo para ajudar nos estudos</p>
+<h1>📚 Painel de Disciplinas</h1>
+<p>Organização de matérias e aulas</p>
 </header>
 
-<div class="container">
-
-<!-- SISTEMA DE MATÉRIAS -->
-<div class="card">
-<h2>📚 Minhas Matérias</h2>
-
-<input id="novaMateria" placeholder="Nome da matéria">
-<button onclick="addMateria()">Adicionar Matéria</button>
-
-<div id="listaMaterias"></div>
-</div>
-
-<!-- CALENDÁRIO -->
-<div class="card">
-<h2>📅 Calendário Escolar</h2>
-<input type="date" id="dataEvento">
-<input type="text" id="eventoInput" placeholder="Prova ou Trabalho">
-<button onclick="addEvento()">Adicionar</button>
-<ul id="listaEventos"></ul>
-</div>
-
-<!-- GRAFICO -->
-<div class="card">
-<h2>📊 Gráfico de Notas</h2>
-<input id="materiaNota" placeholder="Matéria">
-<input type="number" id="notaValor" placeholder="Nota">
-<button onclick="addNota()">Adicionar Nota</button>
-<canvas id="grafico"></canvas>
-</div>
-
-<!-- TAREFAS -->
-<div class="card">
-<h2>🧠 Tarefas</h2>
-<input id="tarefa" placeholder="Nova tarefa">
-<button onclick="addTarefa()">Adicionar</button>
-<ul id="lista"></ul>
-</div>
-
-<!-- RESUMOS -->
-<div class="card">
-<h2>📝 Resumo Geral</h2>
-<textarea id="resumo"></textarea>
-<button onclick="salvarResumo()">Salvar</button>
-<p id="status"></p>
-</div>
-
-<!-- QUIZ -->
-<div class="card">
-<h2>🧮 Modo Prova</h2>
-<p id="pergunta"></p>
-<input type="number" id="resposta">
-<button onclick="verificar()">Responder</button>
-<p id="resultado"></p>
-<p>Acertos: <span id="acertos">0</span></p>
-</div>
-
-</div>
+<div class="container" id="container"></div>
 
 <script>
 
-/* ---------------- MATÉRIAS ---------------- */
+/* DISCIPLINAS DA BNCC + TECNOLOGIA */
 
-let materias = JSON.parse(localStorage.getItem("materias")) || []
+const disciplinas = [
 
-function salvarMaterias(){
-localStorage.setItem("materias", JSON.stringify(materias))
+"Português",
+"Matemática",
+"História",
+"Geografia",
+"Física",
+"Química",
+"Biologia",
+"Inglês",
+"Educação Física",
+"Artes",
+
+"Programação",
+"Robótica",
+"Inteligência Artificial",
+"Desenvolvimento Web",
+"Banco de Dados",
+"Algoritmos",
+"Redes de Computadores"
+
+]
+
+let dados = JSON.parse(localStorage.getItem("disciplinas")) || {}
+
+function salvar(){
+
+localStorage.setItem("disciplinas",JSON.stringify(dados))
+
 }
 
-function addMateria(){
+function criarPainel(){
 
-let nome = document.getElementById("novaMateria").value
+const container = document.getElementById("container")
 
-if(!nome) return
+container.innerHTML=""
 
-materias.push({nome, anotacao:""})
-salvarMaterias()
-document.getElementById("novaMateria").value=""
+disciplinas.forEach(nome=>{
 
-renderMaterias()
+if(!dados[nome]) dados[nome]=[]
 
-}
+let aulasHTML=""
 
-function removerMateria(i){
-materias.splice(i,1)
-salvarMaterias()
-renderMaterias()
-}
+dados[nome].forEach((aula,i)=>{
 
-function salvarAnotacao(i,valor){
-materias[i].anotacao = valor
-salvarMaterias()
-}
-
-function renderMaterias(){
-
-let area = document.getElementById("listaMaterias")
-area.innerHTML=""
-
-materias.forEach((m,i)=>{
-
-area.innerHTML += `
-<div class="materia">
-<strong>${m.nome}</strong>
-<textarea placeholder="Anotações..." 
-onkeyup="salvarAnotacao(${i},this.value)">${m.anotacao}</textarea>
-<button onclick="removerMateria(${i})">Remover</button>
+aulasHTML += `
+<div class="aula">
+<strong>${aula.titulo}</strong>
+<p>${aula.conteudo}</p>
+<button onclick="removerAula('${nome}',${i})">Remover</button>
 </div>
+`
+
+})
+
+container.innerHTML += `
+
+<div class="card">
+
+<h2>${nome}</h2>
+
+<input id="titulo-${nome}" placeholder="Título da aula">
+
+<textarea id="conteudo-${nome}" placeholder="Conteúdo da aula"></textarea>
+
+<button onclick="addAula('${nome}')">Adicionar Aula</button>
+
+<div>${aulasHTML}</div>
+
+</div>
+
 `
 
 })
 
 }
 
-renderMaterias()
+function addAula(nome){
 
-/* ---------------- CALENDARIO ---------------- */
+const titulo = document.getElementById(`titulo-${nome}`).value
+const conteudo = document.getElementById(`conteudo-${nome}`).value
 
-let eventos = JSON.parse(localStorage.getItem("eventos")) || []
+if(!titulo || !conteudo) return
 
-function addEvento(){
-
-let data = document.getElementById("dataEvento").value
-let evento = document.getElementById("eventoInput").value
-
-if(data && evento){
-
-eventos.push(`${data} - ${evento}`)
-
-localStorage.setItem("eventos",JSON.stringify(eventos))
-
-renderEventos()
-
-document.getElementById("eventoInput").value=""
-
-}
-
-}
-
-function renderEventos(){
-
-let lista = document.getElementById("listaEventos")
-lista.innerHTML=""
-
-eventos.forEach(e=>{
-
-lista.innerHTML += `<li>${e}</li>`
-
+dados[nome].push({
+titulo,
+conteudo
 })
 
-}
+salvar()
 
-renderEventos()
-
-/* ---------------- GRAFICO ---------------- */
-
-let materiasGraf=[]
-let notas=[]
-
-const ctx = document.getElementById("grafico")
-
-const grafico = new Chart(ctx,{
-type:'bar',
-data:{
-labels:materiasGraf,
-datasets:[{
-label:'Notas',
-data:notas,
-backgroundColor:'#4f46e5'
-}]
-},
-options:{
-scales:{
-y:{beginAtZero:true,max:10}
-}
-}
-})
-
-function addNota(){
-
-let mat = document.getElementById("materiaNota").value
-let nota = parseFloat(document.getElementById("notaValor").value)
-
-if(mat && !isNaN(nota)){
-
-materiasGraf.push(mat)
-notas.push(nota)
-
-grafico.update()
-
-document.getElementById("materiaNota").value=""
-document.getElementById("notaValor").value=""
+criarPainel()
 
 }
 
-}
+function removerAula(nome,i){
 
-/* ---------------- TAREFAS ---------------- */
+dados[nome].splice(i,1)
 
-function addTarefa(){
+salvar()
 
-let t = document.getElementById("tarefa").value
-
-if(!t) return
-
-let li = document.createElement("li")
-
-li.textContent = t
-
-document.getElementById("lista").appendChild(li)
-
-document.getElementById("tarefa").value=""
+criarPainel()
 
 }
 
-/* ---------------- RESUMO ---------------- */
-
-function salvarResumo(){
-
-localStorage.setItem("resumo",document.getElementById("resumo").value)
-
-document.getElementById("status").innerText="Resumo salvo!"
-
-}
-
-document.getElementById("resumo").value = localStorage.getItem("resumo") || ""
-
-/* ---------------- QUIZ ---------------- */
-
-let n1,n2,acertos=0
-
-function novaPergunta(){
-
-n1 = Math.floor(Math.random()*10)+1
-n2 = Math.floor(Math.random()*10)+1
-
-document.getElementById("pergunta").innerText =
-`Quanto é ${n1} x ${n2}?`
-
-}
-
-function verificar(){
-
-let r = parseInt(document.getElementById("resposta").value)
-
-if(r === n1*n2){
-
-acertos++
-
-document.getElementById("resultado").innerText="✅ Acertou!"
-
-document.getElementById("acertos").innerText = acertos
-
-novaPergunta()
-
-}else{
-
-document.getElementById("resultado").innerText="❌ Errado"
-
-}
-
-}
-
-novaPergunta()
+criarPainel()
 
 </script>
 
