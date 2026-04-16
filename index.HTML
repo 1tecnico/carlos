@@ -1,195 +1,145 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <title>Direitos Humanos na Escola</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
 
-<title>Painel de Disciplinas</title>
+    header {
+      background-color: #2c3e50;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
 
-<style>
+    .container {
+      padding: 20px;
+    }
 
-body{
-font-family:Arial;
-background:#eef2ff;
-margin:0;
-}
+    img {
+      max-width: 100%;
+      border-radius: 10px;
+      margin: 15px 0;
+    }
 
-header{
-background:#4338ca;
-color:white;
-text-align:center;
-padding:20px;
-}
+    .comentarios {
+      margin-top: 30px;
+    }
 
-.container{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-gap:20px;
-padding:20px;
-}
+    textarea {
+      width: 100%;
+      height: 100px;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
 
-.card{
-background:white;
-padding:15px;
-border-radius:10px;
-box-shadow:0 3px 10px rgba(0,0,0,0.1);
-}
+    button {
+      margin-top: 10px;
+      padding: 10px 15px;
+      border: none;
+      background-color: #3498db;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
 
-.card h2{
-margin-top:0;
-color:#4338ca;
-}
+    button:hover {
+      background-color: #2980b9;
+    }
 
-input,textarea{
-width:100%;
-padding:8px;
-margin-top:5px;
-margin-bottom:10px;
-}
+    .voltar {
+      margin-top: 20px;
+      display: inline-block;
+      background-color: #e74c3c;
+    }
 
-button{
-background:#4338ca;
-color:white;
-border:none;
-padding:6px 10px;
-border-radius:5px;
-cursor:pointer;
-}
+    .voltar:hover {
+      background-color: #c0392b;
+    }
 
-button:hover{
-background:#312e81;
-}
+    .lista-comentarios {
+      margin-top: 20px;
+      padding: 10px;
+      background: white;
+      border-radius: 10px;
+    }
 
-.aula{
-background:#eef2ff;
-padding:8px;
-border-radius:6px;
-margin-bottom:6px;
-}
-
-</style>
+    .comentario-item {
+      border-bottom: 1px solid #ddd;
+      padding: 8px 0;
+    }
+  </style>
 </head>
-
 <body>
 
 <header>
-<h1>📚 Painel de Disciplinas</h1>
-<p>Organização de matérias e aulas</p>
+  <h1>Direitos Humanos na Escola</h1>
 </header>
 
-<div class="container" id="container"></div>
+<div class="container">
+
+  <h2>Relação entre professores, alunos e profissionais</h2>
+
+  <p>
+    Os direitos humanos na escola são fundamentais para garantir um ambiente respeitoso, justo e inclusivo. A relação entre professores, alunos e outros profissionais deve ser baseada no respeito mútuo, na empatia e na valorização das diferenças.
+  </p>
+
+  <p>
+    Professores têm o papel de orientar e ensinar, mas também de ouvir e compreender os alunos. Já os estudantes devem respeitar os educadores e colegas, criando um ambiente mais harmonioso. Outros profissionais da escola, como coordenadores e funcionários, também contribuem para esse equilíbrio, garantindo organização e apoio.
+  </p>
+
+  <p>
+    Quando todos respeitam os direitos uns dos outros, a escola se torna um espaço mais seguro e produtivo, onde o aprendizado acontece de forma mais eficiente e humana.
+  </p>
+
+  <img src="https://images.unsplash.com/photo-1588072432836-e10032774350" alt="Ambiente escolar">
+
+  <div class="comentarios">
+    <h3>Deixe seu comentário:</h3>
+    <textarea id="campoComentario" placeholder="Escreva aqui..."></textarea>
+    <br>
+    <button onclick="enviarComentario()">Enviar</button>
+
+    <div class="lista-comentarios" id="listaComentarios">
+      <h4>Comentários:</h4>
+    </div>
+  </div>
+
+  <button class="voltar" onclick="voltarPagina()">Voltar</button>
+
+</div>
 
 <script>
+  function enviarComentario() {
+    let campo = document.getElementById("campoComentario");
+    let texto = campo.value.trim();
 
-/* DISCIPLINAS DA BNCC + TECNOLOGIA */
+    if (texto === "") {
+      alert("Digite um comentário antes de enviar!");
+      return;
+    }
 
-const disciplinas = [
+    let lista = document.getElementById("listaComentarios");
 
-"Português",
-"Matemática",
-"História",
-"Geografia",
-"Física",
-"Química",
-"Biologia",
-"Inglês",
-"Educação Física",
-"Artes",
+    let novoComentario = document.createElement("div");
+    novoComentario.classList.add("comentario-item");
+    novoComentario.textContent = texto;
 
-"Programação",
-"Robótica",
-"Inteligência Artificial",
-"Desenvolvimento Web",
-"Banco de Dados",
-"Algoritmos",
-"Redes de Computadores"
+    lista.appendChild(novoComentario);
 
-]
+    campo.value = "";
+  }
 
-let dados = JSON.parse(localStorage.getItem("disciplinas")) || {}
-
-function salvar(){
-
-localStorage.setItem("disciplinas",JSON.stringify(dados))
-
-}
-
-function criarPainel(){
-
-const container = document.getElementById("container")
-
-container.innerHTML=""
-
-disciplinas.forEach(nome=>{
-
-if(!dados[nome]) dados[nome]=[]
-
-let aulasHTML=""
-
-dados[nome].forEach((aula,i)=>{
-
-aulasHTML += `
-<div class="aula">
-<strong>${aula.titulo}</strong>
-<p>${aula.conteudo}</p>
-<button onclick="removerAula('${nome}',${i})">Remover</button>
-</div>
-`
-
-})
-
-container.innerHTML += `
-
-<div class="card">
-
-<h2>${nome}</h2>
-
-<input id="titulo-${nome}" placeholder="Título da aula">
-
-<textarea id="conteudo-${nome}" placeholder="Conteúdo da aula"></textarea>
-
-<button onclick="addAula('${nome}')">Adicionar Aula</button>
-
-<div>${aulasHTML}</div>
-
-</div>
-
-`
-
-})
-
-}
-
-function addAula(nome){
-
-const titulo = document.getElementById(`titulo-${nome}`).value
-const conteudo = document.getElementById(`conteudo-${nome}`).value
-
-if(!titulo || !conteudo) return
-
-dados[nome].push({
-titulo,
-conteudo
-})
-
-salvar()
-
-criarPainel()
-
-}
-
-function removerAula(nome,i){
-
-dados[nome].splice(i,1)
-
-salvar()
-
-criarPainel()
-
-}
-
-criarPainel()
-
+  function voltarPagina() {
+    window.history.back();
+  }
 </script>
 
 </body>
