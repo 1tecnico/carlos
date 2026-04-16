@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulado + Direitos Humanos</title>
+
+<style>
+body{font-family:Arial;margin:0;background:#eef2f7}
+header{background:#2c3e50;color:#fff;padding:15px;text-align:center}
+section{background:#fff;margin:15px;padding:20px;border-radius:10px}
+button{padding:8px;margin:2px;border:none;border-radius:5px;background:#2c3e50;color:#fff;cursor:pointer}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>Simulado 2º Ano</h1>
+</header>
+
+<section>
+<h2>💬 Comentários - Direitos Humanos</h2>
+
+<input type="text" id="nome" placeholder="Seu nome"><br><br>
+<input type="text" id="comentario" placeholder="Escreva algo">
+<button onclick="enviarComentario()">Enviar</button>
+
+<div id="listaComentarios"></div>
+</section>
+
+<script>
+
+// ENVIAR
+function enviarComentario(){
+let texto = document.getElementById('comentario').value;
+let nome = document.getElementById('nome').value || 'Anônimo';
+
+if(texto.trim() === '') return;
+
+let comentarios = JSON.parse(localStorage.getItem('comentariosDH')) || [];
+
+comentarios.push({
+  texto: texto,
+  nome: nome,
+  data: new Date().toLocaleString(),
+  likes: 0
+});
+
+localStorage.setItem('comentariosDH', JSON.stringify(comentarios));
+
+document.getElementById('comentario').value = '';
+
+mostrarComentarios();
+}
+
+// MOSTRAR
+function mostrarComentarios(){
+let lista = document.getElementById('listaComentarios');
+let comentarios = JSON.parse(localStorage.getItem('comentariosDH')) || [];
+
+lista.innerHTML = '';
+
+comentarios.forEach((c, i) => {
+
+lista.innerHTML += `
+<div style="margin:10px 0;">
+<b>${c.nome}</b> (${c.data})<br>
+${c.texto}<br>
+❤️ ${c.likes}
+<button onclick="curtir(${i})">Curtir</button>
+<button onclick="apagar(${i})">🗑️</button>
+</div>
+`;
+
+});
+}
+
+// CURTIR
+function curtir(i){
+let comentarios = JSON.parse(localStorage.getItem('comentariosDH'));
+comentarios[i].likes++;
+localStorage.setItem('comentariosDH', JSON.stringify(comentarios));
+mostrarComentarios();
+}
+
+// APAGAR
+function apagar(i){
+let comentarios = JSON.parse(localStorage.getItem('comentariosDH'));
+comentarios.splice(i,1);
+localStorage.setItem('comentariosDH', JSON.stringify(comentarios));
+mostrarComentarios();
+}
+
+// CARREGAR
+window.onload = mostrarComentarios;
+
+</script>
+
+</body>
+</html>
