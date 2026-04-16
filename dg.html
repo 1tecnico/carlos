@@ -1,100 +1,119 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Simulado + Direitos Humanos</title>
-
-<style>
-body{font-family:Arial;margin:0;background:#eef2f7}
-header{background:#2c3e50;color:#fff;padding:15px;text-align:center}
-section{background:#fff;margin:15px;padding:20px;border-radius:10px}
-button{padding:8px;margin:2px;border:none;border-radius:5px;background:#2c3e50;color:#fff;cursor:pointer}
-</style>
+  <meta charset="UTF-8">
+  <title>Mochila Escolar Inteligente</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #eef2f7;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #4a90e2;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+    .container {
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    .card {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    input, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #4a90e2;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #357abd;
+    }
+    .aula {
+      border-top: 1px solid #ddd;
+      padding-top: 10px;
+      margin-top: 10px;
+    }
+  </style>
 </head>
-
 <body>
 
 <header>
-<h1>Simulado 2º Ano</h1>
+  <h1>🎒 Minha Mochila Escolar</h1>
+  <p>Organize suas aulas e anotações</p>
 </header>
 
-<section>
-<h2>💬 Comentários - Direitos Humanos</h2>
+<div class="container">
 
-<input type="text" id="nome" placeholder="Seu nome"><br><br>
-<input type="text" id="comentario" placeholder="Escreva algo">
-<button onclick="enviarComentario()">Enviar</button>
+  <div class="card">
+    <h2>Adicionar Aula</h2>
+    <input type="text" id="nomeAula" placeholder="Nome da aula (ex: Matemática)">
+    <textarea id="anotacaoAula" placeholder="Anotações da aula..."></textarea>
+    <button onclick="adicionarAula()">Adicionar Aula</button>
+  </div>
 
-<div id="listaComentarios"></div>
-</section>
+  <div class="card">
+    <h2>Minhas Aulas</h2>
+    <div id="listaAulas"></div>
+  </div>
+
+</div>
 
 <script>
+  let aulas = [];
 
-// ENVIAR
-function enviarComentario(){
-let texto = document.getElementById('comentario').value;
-let nome = document.getElementById('nome').value || 'Anônimo';
+  function adicionarAula() {
+    const nome = document.getElementById('nomeAula').value;
+    const anotacao = document.getElementById('anotacaoAula').value;
 
-if(texto.trim() === '') return;
+    if (nome === '' || anotacao === '') {
+      alert('Preencha todos os campos!');
+      return;
+    }
 
-let comentarios = JSON.parse(localStorage.getItem('comentariosDH')) || [];
+    aulas.push({ nome, anotacao });
+    atualizarLista();
 
-comentarios.push({
-  texto: texto,
-  nome: nome,
-  data: new Date().toLocaleString(),
-  likes: 0
-});
+    document.getElementById('nomeAula').value = '';
+    document.getElementById('anotacaoAula').value = '';
+  }
 
-localStorage.setItem('comentariosDH', JSON.stringify(comentarios));
+  function atualizarLista() {
+    const lista = document.getElementById('listaAulas');
+    lista.innerHTML = '';
 
-document.getElementById('comentario').value = '';
+    aulas.forEach((aula, index) => {
+      const div = document.createElement('div');
+      div.className = 'aula';
+      div.innerHTML = `
+        <strong>${aula.nome}</strong>
+        <p>${aula.anotacao}</p>
+        <button onclick="removerAula(${index})">Remover</button>
+      `;
+      lista.appendChild(div);
+    });
+  }
 
-mostrarComentarios();
-}
-
-// MOSTRAR
-function mostrarComentarios(){
-let lista = document.getElementById('listaComentarios');
-let comentarios = JSON.parse(localStorage.getItem('comentariosDH')) || [];
-
-lista.innerHTML = '';
-
-comentarios.forEach((c, i) => {
-
-lista.innerHTML += `
-<div style="margin:10px 0;">
-<b>${c.nome}</b> (${c.data})<br>
-${c.texto}<br>
-❤️ ${c.likes}
-<button onclick="curtir(${i})">Curtir</button>
-<button onclick="apagar(${i})">🗑️</button>
-</div>
-`;
-
-});
-}
-
-// CURTIR
-function curtir(i){
-let comentarios = JSON.parse(localStorage.getItem('comentariosDH'));
-comentarios[i].likes++;
-localStorage.setItem('comentariosDH', JSON.stringify(comentarios));
-mostrarComentarios();
-}
-
-// APAGAR
-function apagar(i){
-let comentarios = JSON.parse(localStorage.getItem('comentariosDH'));
-comentarios.splice(i,1);
-localStorage.setItem('comentariosDH', JSON.stringify(comentarios));
-mostrarComentarios();
-}
-
-// CARREGAR
-window.onload = mostrarComentarios;
-
+  function removerAula(index) {
+    aulas.splice(index, 1);
+    atualizarLista();
+  }
 </script>
 
 </body>
