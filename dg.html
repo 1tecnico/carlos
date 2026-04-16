@@ -1,118 +1,144 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Mochila Escolar Inteligente</title>
+  <title>Direitos Humanos na Escola</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #eef2f7;
       margin: 0;
       padding: 0;
+      background-color: #f4f4f4;
     }
+
     header {
-      background: #4a90e2;
+      background-color: #2c3e50;
       color: white;
       padding: 15px;
       text-align: center;
     }
+
     .container {
       padding: 20px;
-      max-width: 800px;
-      margin: auto;
     }
-    .card {
-      background: white;
-      padding: 15px;
+
+    img {
+      max-width: 100%;
       border-radius: 10px;
-      margin-bottom: 15px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin: 15px 0;
     }
-    input, textarea, button {
+
+    .comentarios {
+      margin-top: 30px;
+    }
+
+    textarea {
       width: 100%;
+      height: 100px;
       padding: 10px;
-      margin-top: 5px;
-      margin-bottom: 10px;
       border-radius: 5px;
       border: 1px solid #ccc;
     }
+
     button {
-      background: #4a90e2;
-      color: white;
+      margin-top: 10px;
+      padding: 10px 15px;
       border: none;
+      background-color: #3498db;
+      color: white;
+      border-radius: 5px;
       cursor: pointer;
     }
+
     button:hover {
-      background: #357abd;
+      background-color: #2980b9;
     }
-    .aula {
-      border-top: 1px solid #ddd;
-      padding-top: 10px;
-      margin-top: 10px;
+
+    .voltar {
+      margin-top: 20px;
+      display: inline-block;
+      background-color: #e74c3c;
+    }
+
+    .voltar:hover {
+      background-color: #c0392b;
+    }
+
+    .lista-comentarios {
+      margin-top: 20px;
+      padding: 10px;
+      background: white;
+      border-radius: 10px;
+    }
+
+    .comentario-item {
+      border-bottom: 1px solid #ddd;
+      padding: 8px 0;
     }
   </style>
 </head>
 <body>
 
 <header>
-  <h1>🎒 Minha Mochila Escolar</h1>
-  <p>Organize suas aulas e anotações</p>
+  <h1>Direitos Humanos na Escola</h1>
 </header>
 
 <div class="container">
 
-  <div class="card">
-    <h2>Adicionar Aula</h2>
-    <input type="text" id="nomeAula" placeholder="Nome da aula (ex: Matemática)">
-    <textarea id="anotacaoAula" placeholder="Anotações da aula..."></textarea>
-    <button onclick="adicionarAula()">Adicionar Aula</button>
+  <h2>Relação entre professores, alunos e profissionais</h2>
+
+  <p>
+    Os direitos humanos na escola são fundamentais para garantir um ambiente respeitoso, justo e inclusivo. A relação entre professores, alunos e outros profissionais deve ser baseada no respeito mútuo, na empatia e na valorização das diferenças.
+  </p>
+
+  <p>
+    Professores têm o papel de orientar e ensinar, mas também de ouvir e compreender os alunos. Já os estudantes devem respeitar os educadores e colegas, criando um ambiente mais harmonioso. Outros profissionais da escola, como coordenadores e funcionários, também contribuem para esse equilíbrio, garantindo organização e apoio.
+  </p>
+
+  <p>
+    Quando todos respeitam os direitos uns dos outros, a escola se torna um espaço mais seguro e produtivo, onde o aprendizado acontece de forma mais eficiente e humana.
+  </p>
+
+  <img src="https://images.unsplash.com/photo-1588072432836-e10032774350" alt="Ambiente escolar">
+
+  <div class="comentarios">
+    <h3>Deixe seu comentário:</h3>
+    <textarea id="campoComentario" placeholder="Escreva aqui..."></textarea>
+    <br>
+    <button type="button" onclick="enviarComentario()">Enviar</button>
+
+    <div class="lista-comentarios" id="listaComentarios">
+      <h4>Comentários:</h4>
+    </div>
   </div>
 
-  <div class="card">
-    <h2>Minhas Aulas</h2>
-    <div id="listaAulas"></div>
-  </div>
+  <button type="button" class="voltar" onclick="voltarPagina()">Voltar</button>
 
 </div>
 
 <script>
-  let aulas = [];
+  function enviarComentario() {
+    let campo = document.getElementById("campoComentario");
+    let texto = campo.value.trim();
 
-  function adicionarAula() {
-    const nome = document.getElementById('nomeAula').value;
-    const anotacao = document.getElementById('anotacaoAula').value;
-
-    if (nome === '' || anotacao === '') {
-      alert('Preencha todos os campos!');
+    if (texto === "") {
+      alert("Digite um comentário antes de enviar!");
       return;
     }
 
-    aulas.push({ nome, anotacao });
-    atualizarLista();
+    let lista = document.getElementById("listaComentarios");
 
-    document.getElementById('nomeAula').value = '';
-    document.getElementById('anotacaoAula').value = '';
+    let novoComentario = document.createElement("div");
+    novoComentario.classList.add("comentario-item");
+    novoComentario.textContent = texto;
+
+    lista.appendChild(novoComentario);
+
+    campo.value = "";
   }
 
-  function atualizarLista() {
-    const lista = document.getElementById('listaAulas');
-    lista.innerHTML = '';
-
-    aulas.forEach((aula, index) => {
-      const div = document.createElement('div');
-      div.className = 'aula';
-      div.innerHTML = `
-        <strong>${aula.nome}</strong>
-        <p>${aula.anotacao}</p>
-        <button onclick="removerAula(${index})">Remover</button>
-      `;
-      lista.appendChild(div);
-    });
-  }
-
-  function removerAula(index) {
-    aulas.splice(index, 1);
-    atualizarLista();
+  function voltarPagina() {
+    window.history.back();
   }
 </script>
 
